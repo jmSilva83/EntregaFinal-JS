@@ -1,5 +1,4 @@
 //Maquina Expendedora JS
-
 const outputDiv = document.getElementById("output");
 const productButtonsDiv = document.getElementById("product-buttons");
 const cartDiv = document.getElementById("cart");
@@ -9,7 +8,8 @@ const paymentForm = document.getElementById("payment-form");
 const estiloCarrito = `
     .carrito-item {
         font-family: 'Courier New', monospace;
-        color: #00ff00d0;
+        font-weight: normal;
+        color: #ffffffd0;
         background-color: #333333;
         margin: 10px;
         padding: 8px;
@@ -21,7 +21,8 @@ const estiloCarrito = `
 const estiloFormularioPago = `
     .payment-form {
         font-family: 'Courier New', monospace;
-        color: #00ff00d0;
+        display: inline-block;
+        color: #ffffffd0;
         background-color: #333333;
         padding: 16px;
         margin-top: 16px;
@@ -29,7 +30,8 @@ const estiloFormularioPago = `
     }
 
     .payment-form label {
-        display: block;
+        display: inline-block;
+        align-items: center;
         margin-bottom: 8px;
     }
 
@@ -41,8 +43,9 @@ const estiloFormularioPago = `
     }
 
     .payment-form button {
+        display: inline-block;
         padding: 8px 16px;
-        background-color: #4caf50;
+        background-color: #f44444;
         color: #ffffff;
         border: none;
         border-radius: 4px;
@@ -66,7 +69,7 @@ document.head.appendChild(styleElementPago);
 function reproducirSonidoPagar() {
     const paySound = document.getElementById("paySound");
     if (paySound) {
-        paySound.volume = 1; // Puedes ajustar el volumen según tus preferencias
+        paySound.volume = 0.5; // Puedes ajustar el volumen según tus preferencias
         paySound.play();
     }
 }
@@ -112,13 +115,8 @@ const maquinaExpendedora = {
         const sound = document.getElementById(soundId);
 
         if (sound) {
-            // Clonar el elemento de audio para evitar problemas de concurrencia
             const newSound = sound.cloneNode(true);
-
-            // Establecer el volumen en el nuevo elemento de audio
-            newSound.volume = 0.5; // Puedes ajustar el volumen según tus preferencias
-
-            // Reproducir el nuevo sonido
+            newSound.volume = 0.1;
             newSound.play();
         }
     },
@@ -146,17 +144,16 @@ const maquinaExpendedora = {
         // Mostrar el carrito después de actualizar la información
         this.mostrarCarrito();
 
-        // Agregar notificación con Toastify
+        // Agregar notificación con librería Toastify
         Toastify({
             text: `${producto.nombre} agregado al carrito`,
             duration: 3000,
             gravity: "top",
             position: "right",
-            backgroundColor:
-                "linear-gradient(to right, rgba(77,74,74,1) 20%, rgba(119,118,118,1) 80%, rgba(129,129,129,1) 100%)",
+            backgroundColor: "#333333",
             stopOnFocus: true,
             style: {
-                color: "#00ff00d0",
+                color: "#ffffffd0",
                 fontFamily: "'Currier New', monospace",
             },
         }).showToast();
@@ -237,10 +234,7 @@ const maquinaExpendedora = {
                 )}, Dinero Recibido: $${montoIngresado.toFixed(2)}`
             );
 
-            // Reproducir sonido al realizar el pago
             reproducirSonidoPagar();
-
-            
 
             this.vaciarCarrito();
 
@@ -278,7 +272,7 @@ const maquinaExpendedora = {
         if (ultimoProductoComprado) {
             const fechaHoraCompra = localStorage.getItem("fechaHoraCompra");
 
-            let mensaje = `Último producto comprado: ${ultimoProductoComprado}\n`;
+            let mensaje = `Ultimo producto comprado: ${ultimoProductoComprado}\n`;
 
             if (fechaHoraCompra) {
                 mensaje += `Fecha y hora de la compra: ${fechaHoraCompra}\n`;
@@ -325,10 +319,8 @@ function realizarPago(totalAPagar) {
 function playMainSound() {
     const mainSound = document.getElementById("mainSound");
 
-    // Ajusta el volumen de forma fija (0.2 para un volumen más bajo)
     mainSound.volume = 1;
 
-    // Reproduce el sonido
     mainSound.play();
 }
 playMainSound();
