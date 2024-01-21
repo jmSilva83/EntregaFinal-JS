@@ -15,6 +15,7 @@ const estiloCarrito = `
         padding: 8px;
         margin-bottom: 4px;
         border-radius: 4px;
+        display: inline-flexbox;
     }
 `;
 
@@ -150,11 +151,11 @@ const maquinaExpendedora = {
             duration: 3000,
             gravity: "top",
             position: "right",
-            backgroundColor: "#333333",
             stopOnFocus: true,
             style: {
                 color: "#ffffffd0",
                 fontFamily: "'Currier New', monospace",
+                background: "#333333",
             },
         }).showToast();
 
@@ -183,7 +184,7 @@ const maquinaExpendedora = {
 
             cartDiv.appendChild(productoDiv);
 
-            totalCompra += producto.precioTotal; // Usar precioTotal en lugar de precio
+            totalCompra += producto.precioTotal;
         });
 
         cartDiv.innerHTML += `<br><span class="carrito-item">Total de la compra: $${totalCompra.toFixed(
@@ -272,7 +273,9 @@ const maquinaExpendedora = {
         if (ultimoProductoComprado) {
             const fechaHoraCompra = localStorage.getItem("fechaHoraCompra");
 
-            let mensaje = `Ultimo producto comprado: ${ultimoProductoComprado}\n`;
+            let mensaje = `Último producto comprado: ${decodeURIComponent(
+                ultimoProductoComprado
+            )}\n`;
 
             if (fechaHoraCompra) {
                 mensaje += `Fecha y hora de la compra: ${fechaHoraCompra}\n`;
@@ -316,14 +319,30 @@ function realizarPago(totalAPagar) {
     maquinaExpendedora.realizarPago(totalAPagar);
 }
 
+// ...
+
 function playMainSound() {
     const mainSound = document.getElementById("mainSound");
 
-    mainSound.volume = 1;
+    // Ajusta el volumen de forma fija (0.2 para un volumen más bajo)
+    mainSound.volume = 0.5;
 
+    // Reproduce el sonido
     mainSound.play();
+
+    // Pausar el sonido cuando la pestaña no está visible
+    document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "hidden") {
+            mainSound.pause();
+        } else {
+            mainSound.play();
+        }
+    });
 }
+
 playMainSound();
+
+// ...
 
 maquinaExpendedora.mostrarUltimoProductoComprado();
 inicializarMaquina();
