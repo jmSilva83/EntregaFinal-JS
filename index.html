@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="shortcut icon"
+            href="./assets/img/GuidanceVendingMachine.svg"
+            type="image/x-icon"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+        />
+        <link rel="stylesheet" href="styles.css" />
+        <title>Máquina Expendedora</title>
+    </head>
+
+    <body>
+        <div id="output" class="output-container"></div>
+
+        <!-- Botones de productos -->
+        <div id="product-buttons" class="product-buttons-container"></div>
+
+        <!-- Carrito de compras -->
+        <div id="cart" class="cart-container"></div>
+
+        <!-- Formulario de pago -->
+        <div id="payment-form" class="payment-form-container"></div>
+
+        <audio id="mainSound" autoplay loop>
+            <source src="assets/sounds/hum.wav" type="audio/mp3" />
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+        <audio id="buySound">
+            <source src="./assets/sounds/buttonBeepHigh.wav" type="audio/mp3" />
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+        <audio
+            id="paySound"
+            src="assets/sounds/coinInsert.wav"
+            type="audio/mp3"
+        ></audio>
+
+        <script
+            type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/toastify-js"
+        ></script>
+        <script src="main.js"></script>
+    </body>
+</html>

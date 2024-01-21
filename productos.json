@@ -1,0 +1,39 @@
+{
+    "productos": [
+        {
+            "nombre": "Coca-Cola",
+            "numero": 1,
+            "precio": 1350.0,
+            "stock": 10,
+            "conAlcohol": false
+        },
+        {
+            "nombre": "Fernet Branca",
+            "numero": 2,
+            "precio": 7800.0,
+            "stock": 5,
+            "conAlcohol": true
+        },
+        {
+            "nombre": "Cerveza Quilmes",
+            "numero": 3,
+            "precio": 950.0,
+            "stock": 8,
+            "conAlcohol": true
+        },
+        {
+            "nombre": "Vino Trumpeter",
+            "numero": 4,
+            "precio": 3500.0,
+            "stock": 12,
+            "conAlcohol": true
+        },
+        {
+            "nombre": "Hielo",
+            "numero": 5,
+            "precio": 300.0,
+            "stock": 20,
+            "conAlcohol": false
+        }
+    ]
+}
