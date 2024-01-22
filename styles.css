@@ -43,10 +43,3 @@ button img {
     width: 100%; /* Ajusta el tamaño de la imagen al 100% del contenedor del botón */
     border-radius: 8px; /* Agrega bordes redondeados a la imagen */
 }
-
-.container-fluid {
-    display: inline-block;
-    align-items: center;
-    position: relative;
-    display: inline-flexbox;
-}

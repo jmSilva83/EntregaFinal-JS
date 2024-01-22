@@ -1,96 +1,122 @@
-//Maquina Expendedora JS
-const outputDiv = document.getElementById("output");
-const productButtonsDiv = document.getElementById("product-buttons");
-const cartDiv = document.getElementById("cart");
-const paymentForm = document.getElementById("payment-form");
-
-// Estilos
-const estiloCarrito = `
-    .carrito-item {
-        font-family: 'Courier New', monospace;
-        font-weight: normal;
-        color: #ffffffd0;
-        background-color: #333333;
-        margin: 10px;
-        padding: 8px;
-        margin-bottom: 4px;
-        border-radius: 4px;
-        display: inline-flexbox;
-    }
-`;
-
-const estiloFormularioPago = `
-    .payment-form {
-        font-family: 'Courier New', monospace;
-        display: inline-block;
-        color: #ffffffd0;
-        background-color: #333333;
-        padding: 16px;
-        margin-top: 16px;
-        border-radius: 8px;
-    }
-
-    .payment-form label {
-        display: inline-block;
-        align-items: center;
-        margin-bottom: 8px;
-    }
-
-    .payment-form input {
-        padding: 8px;
-        margin-bottom: 16px;
-        border: 1px solid #666666;
-        border-radius: 4px;
-    }
-
-    .payment-form button {
-        display: inline-block;
-        padding: 8px 16px;
-        background-color: #f44444;
-        color: #ffffff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .payment-form button:hover {
-        background-color: #45a049;
-    }
-`;
-
-// Agrega los estilos al head del documento
-const styleElementCarrito = document.createElement("style");
-styleElementCarrito.innerHTML = estiloCarrito;
-document.head.appendChild(styleElementCarrito);
-
-const styleElementPago = document.createElement("style");
-styleElementPago.innerHTML = estiloFormularioPago;
-document.head.appendChild(styleElementPago);
-
-function reproducirSonidoPagar() {
-    const paySound = document.getElementById("paySound");
-    if (paySound) {
-        paySound.volume = 0.5; // Puedes ajustar el volumen según tus preferencias
-        paySound.play();
+class Producto {
+    constructor(nombre, numero, precio, stock, conAlcohol) {
+        this.nombre = nombre;
+        this.numero = numero;
+        this.precio = precio;
+        this.stock = stock;
+        this.conAlcohol = conAlcohol;
     }
 }
 
-const maquinaExpendedora = {
-    productos: [],
-    carrito: [],
+class MaquinaExpendedora {
+    constructor() {
+        this.productos = [];
+        this.carrito = [];
+        this.outputDiv = document.getElementById("output");
+        this.productButtonsDiv = document.getElementById("product-buttons");
+        this.cartDiv = document.getElementById("cart");
+        this.paymentForm = document.getElementById("payment-form");
+        this.initializeStyles();
+        this.initializeSounds();
+    }
 
-    agregarProducto: function (nombre, numero, precio, stock, conAlcohol) {
-        const producto = {
-            nombre: nombre,
-            numero: numero,
-            precio: precio,
-            stock: stock,
-            conAlcohol: conAlcohol,
+    initializeStyles() {
+        const estiloCarrito = `
+            .carrito-item {
+                font-family: 'Courier New', monospace;
+                font-weight: normal;
+                color: #ffffffd0;
+                background-color: #333333;
+                margin: 10px;
+                padding: 8px;
+                margin-bottom: 4px;
+                border-radius: 4px;
+                display: inline-flexbox;
+            }
+        `;
+
+        const estiloFormularioPago = `
+            .payment-form {
+                font-family: 'Courier New', monospace;
+                display: inline-block;
+                color: #ffffffd0;
+                background-color: #333333;
+                padding: 16px;
+                margin-top: 16px;
+                border-radius: 8px;
+            }
+
+            .payment-form label {
+                display: inline-block;
+                align-items: center;
+                margin-bottom: 8px;
+            }
+
+            .payment-form input {
+                padding: 8px;
+                margin-bottom: 16px;
+                border: 1px solid #666666;
+                border-radius: 4px;
+            }
+
+            .payment-form button {
+                display: inline-block;
+                padding: 8px 16px;
+                background-color: #f44444;
+                color: #ffffff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .payment-form button:hover {
+                background-color: #45a049;
+            }
+        `;
+
+        this.addStyleToHead(estiloCarrito, "carrito-style");
+        this.addStyleToHead(estiloFormularioPago, "pago-style");
+    }
+
+    addStyleToHead(style, id) {
+        const styleElement = document.createElement("style");
+        styleElement.innerHTML = style;
+        styleElement.id = id;
+        document.head.appendChild(styleElement);
+    }
+
+    initializeSounds() {
+        const buySound = new Audio("./assets/sounds/buttonBeepHigh.wav");
+        const paySound = new Audio("./assets/sounds/coinInsert.wav");
+        const mainSound = new Audio("./assets/sounds/hum.wav");
+
+        this.sounds = {
+            buySound,
+            paySound,
+            mainSound,
         };
-        this.productos.push(producto);
-    },
+    }
 
-    mostrarProductos: function () {
+    reproducirSonidoPagar() {
+        const paySound = this.sounds.paySound;
+        if (paySound) {
+            paySound.volume = 0.3;
+            paySound.play();
+        }
+    }
+
+    agregarProducto(nombre, numero, precio, stock, conAlcohol) {
+        const producto = new Producto(
+            nombre,
+            numero,
+            precio,
+            stock,
+            conAlcohol
+        );
+        this.productos.push(producto);
+    }
+
+    mostrarProductos() {
         this.productos.length === 0
             ? this.mostrarMensaje(
                   "No hay productos disponibles en la máquina expendedora.\n"
@@ -98,9 +124,9 @@ const maquinaExpendedora = {
             : this.productos.forEach((producto) => {
                   this.crearBotonProducto(producto);
               });
-    },
+    }
 
-    crearBotonProducto: function (producto) {
+    crearBotonProducto(producto) {
         const botonProducto = document.createElement("button");
         botonProducto.textContent = `Comprar ${
             producto.nombre
@@ -109,31 +135,29 @@ const maquinaExpendedora = {
             this.agregarAlCarrito(producto);
             this.reproducirSonido("buySound");
         });
-        productButtonsDiv.appendChild(botonProducto);
-    },
+        this.productButtonsDiv.appendChild(botonProducto);
+    }
 
-    reproducirSonido: function (soundId) {
-        const sound = document.getElementById(soundId);
+    reproducirSonido(soundId) {
+        const sound = this.sounds[soundId];
 
         if (sound) {
             const newSound = sound.cloneNode(true);
             newSound.volume = 0.1;
             newSound.play();
         }
-    },
+    }
 
-    agregarAlCarrito: function (producto) {
+    agregarAlCarrito(producto) {
         const index = this.carrito.findIndex(
             (item) => item.numero === producto.numero
         );
 
         if (index !== -1) {
-            // Si el producto ya está en el carrito, incrementar cantidad y actualizar precio total
             this.carrito[index].stock += 1;
             this.carrito[index].precioTotal =
                 this.carrito[index].stock * producto.precio;
         } else {
-            // Si el producto no está en el carrito, agregarlo con cantidad y precio total
             const nuevoProducto = {
                 ...producto,
                 stock: 1,
@@ -142,10 +166,8 @@ const maquinaExpendedora = {
             this.carrito.push(nuevoProducto);
         }
 
-        // Mostrar el carrito después de actualizar la información
         this.mostrarCarrito();
 
-        // Agregar notificación con librería Toastify
         Toastify({
             text: `${producto.nombre} agregado al carrito`,
             duration: 3000,
@@ -154,7 +176,7 @@ const maquinaExpendedora = {
             stopOnFocus: true,
             style: {
                 color: "#ffffffd0",
-                fontFamily: "'Currier New', monospace",
+                fontFamily: "'Courier New', monospace",
                 background: "#333333",
             },
         }).showToast();
@@ -163,10 +185,10 @@ const maquinaExpendedora = {
             "ultimoProductoComprado",
             encodeURIComponent(producto.nombre)
         );
-    },
+    }
 
-    mostrarCarrito: function () {
-        cartDiv.innerHTML = "";
+    mostrarCarrito() {
+        this.cartDiv.innerHTML = "";
 
         if (this.carrito.length === 0) {
             return;
@@ -182,19 +204,19 @@ const maquinaExpendedora = {
                 producto.stock
             }, Precio Total: $${producto.precioTotal.toFixed(2)}`;
 
-            cartDiv.appendChild(productoDiv);
+            this.cartDiv.appendChild(productoDiv);
 
             totalCompra += producto.precioTotal;
         });
 
-        cartDiv.innerHTML += `<br><span class="carrito-item">Total de la compra: $${totalCompra.toFixed(
+        this.cartDiv.innerHTML += `<br><span class="carrito-item">Total de la compra: $${totalCompra.toFixed(
             2
         )}</span><br>`;
 
         this.mostrarFormularioPago(totalCompra);
-    },
+    }
 
-    mostrarFormularioPago: function (totalAPagar) {
+    mostrarFormularioPago(totalAPagar) {
         const paymentFormHTML = `
             <div class="payment-form">
                 <label for="payment-amount">Ingrese el monto a pagar: $</label>
@@ -202,10 +224,10 @@ const maquinaExpendedora = {
                 <button type="button" onclick="realizarPago(${totalAPagar})">Pagar</button>
             </div>
         `;
-        paymentForm.innerHTML = paymentFormHTML;
-    },
+        this.paymentForm.innerHTML = paymentFormHTML;
+    }
 
-    realizarPago: function (totalAPagar) {
+    realizarPago(totalAPagar) {
         const montoIngresado = parseFloat(
             document.getElementById("payment-amount").value
         );
@@ -227,15 +249,7 @@ const maquinaExpendedora = {
             mensaje += `Fecha y hora de la compra: ${fechaHoraActual}\n`;
             mensaje += "Compra finalizada.\n";
 
-            localStorage.setItem("fechaHoraCompra", fechaHoraActual);
-            localStorage.setItem(
-                "detallesPago",
-                `Total: $${totalAPagar.toFixed(
-                    2
-                )}, Dinero Recibido: $${montoIngresado.toFixed(2)}`
-            );
-
-            reproducirSonidoPagar();
+            this.reproducirSonidoPagar();
 
             this.vaciarCarrito();
 
@@ -251,21 +265,21 @@ const maquinaExpendedora = {
         }
 
         this.mostrarMensaje(mensaje);
-    },
+    }
 
-    vaciarCarrito: function () {
+    vaciarCarrito() {
         this.carrito = [];
         this.actualizarInterfaz();
-    },
+    }
 
-    mostrarMensaje: function (mensaje) {
+    mostrarMensaje(mensaje) {
         const mensajeDiv = document.createElement("div");
         mensajeDiv.innerHTML = mensaje;
         mensajeDiv.classList.add("retro-message");
-        outputDiv.appendChild(mensajeDiv);
-    },
+        this.outputDiv.appendChild(mensajeDiv);
+    }
 
-    mostrarUltimoProductoComprado: function () {
+    mostrarUltimoProductoComprado() {
         const ultimoProductoComprado = localStorage.getItem(
             "ultimoProductoComprado"
         );
@@ -283,20 +297,25 @@ const maquinaExpendedora = {
 
             this.mostrarMensaje(mensaje);
         }
-    },
+    }
 
-    actualizarInterfaz: function () {
-        productButtonsDiv.innerHTML = "";
-        cartDiv.innerHTML = "";
-        paymentForm.innerHTML = "";
+    actualizarInterfaz() {
+        this.productButtonsDiv.innerHTML = "";
+        this.cartDiv.innerHTML = "";
+        this.paymentForm.innerHTML = "";
 
         this.mostrarProductos();
-    },
-};
+    }
+}
 
 function inicializarMaquina() {
     fetch("productos.json")
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then((data) => {
             data.productos.forEach((producto) => {
                 maquinaExpendedora.agregarProducto(
@@ -319,18 +338,12 @@ function realizarPago(totalAPagar) {
     maquinaExpendedora.realizarPago(totalAPagar);
 }
 
-// ...
-
 function playMainSound() {
     const mainSound = document.getElementById("mainSound");
 
-    // Ajusta el volumen de forma fija (0.2 para un volumen más bajo)
     mainSound.volume = 0.5;
-
-    // Reproduce el sonido
     mainSound.play();
 
-    // Pausar el sonido cuando la pestaña no está visible
     document.addEventListener("visibilitychange", function () {
         if (document.visibilityState === "hidden") {
             mainSound.pause();
@@ -342,7 +355,6 @@ function playMainSound() {
 
 playMainSound();
 
-// ...
-
+const maquinaExpendedora = new MaquinaExpendedora();
 maquinaExpendedora.mostrarUltimoProductoComprado();
 inicializarMaquina();
